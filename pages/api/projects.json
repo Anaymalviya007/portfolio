@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "name": "Notion_Clone",
+    "image": "https://itbabble.files.wordpress.com/2021/11/notion.png",
+    "description": "Note taking app Notion - Jotion",
+    "tags": ["Next.js 13", "React", "Convex", "Tailwind"],
+    "source_code": "https://github.com/Anaymalviya007/Notion_Clone",
+    "demo": "jotion-note-taking-app-black.vercel.app"
+  },
+  {
+    "id": 2,
+    "name": "Log Ingestor",
+    "image": "https://imgur.com/tAZotn3.png",
+    "description": "This Flask application provides a log management system that allows ingest logs in large amount with high speed which can be scall-up and scall-down.",
+    "tags": ["React", "Python", "Flask", "Mongodb", "Postgresql", "AWS"],
+    "source_code": "https://github.com/Anaymalviya007/Log_Ingestor"
+  },
+  {
+    "id": 3,
+    "name": "Algorithm Visualization",
+    "image":  "https://imgur.com/8FFqaX8.png",
+    "description": "Sorting_Algorithm_Visualization",
+    "tags": ["C++", "Raylib"],
+    "source_code": "https://github.com/itsnitinr/healthyways"
+  }
+]
