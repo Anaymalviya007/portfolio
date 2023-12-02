@@ -12,6 +12,16 @@ const GithubPage = ({ repos, user }) => {
     level4: '#39d353',
   };
 
+  const renderRepoCards = () => {
+    if (!Array.isArray(repos)) {
+      return <p>Error fetching repositories</p>;
+    }
+
+    return repos.map((repo) => (
+      <RepoCard key={repo.id} repo={repo} />
+    ));
+  };
+
   return (
     <>
       <div className={styles.user}>
@@ -33,9 +43,7 @@ const GithubPage = ({ repos, user }) => {
         </div>
       </div>
       <div className={styles.container}>
-        {repos.map((repo) => (
-          <RepoCard key={repo.id} repo={repo} />
-        ))}
+        {renderRepoCards()}
       </div>
       <div className={styles.contributions}>
         <GitHubCalendar
@@ -50,33 +58,49 @@ const GithubPage = ({ repos, user }) => {
 };
 
 export async function getStaticProps() {
-  const userRes = await fetch(
-    `https://api.github.com/users/${process.env.NEXT_PUBLIC_GITHUB_USERNAME}`,
-    {
-      headers: {
-        Authorization: `token ${process.env.GITHUB_API_KEY}`,
-      },
-    }
-  );
-  const user = await userRes.json();
+  try {
+    const userRes = await fetch(
+      `https://api.github.com/users/${process.env.NEXT_PUBLIC_GITHUB_USERNAME}`,
+      {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_API_KEY}`,
+        },
+      }
+    );
+    const user = await userRes.json();
 
-  const repoRes = await fetch(
-    `https://api.github.com/users/${process.env.NEXT_PUBLIC_GITHUB_USERNAME}/repos?per_page=100`,
-    {
-      headers: {
-        Authorization: `token ${process.env.GITHUB_API_KEY}`,
-      },
-    }
-  );
-  let repos = await repoRes.json();
-  repos = repos
-    .sort((a, b) => b.stargazers_count - a.stargazers_count)
-    .slice(0, 6);
+    const repoRes = await fetch(
+      `https://api.github.com/users/${process.env.NEXT_PUBLIC_GITHUB_USERNAME}/repos?per_page=100`,
+      {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_API_KEY}`,
+        },
+      }
+    );
+    let repos = await repoRes.json();
 
-  return {
-    props: { title: 'GitHub', repos, user },
-    revalidate: 10,
-  };
+    if (!Array.isArray(repos)) {
+      return {
+        props: { title: 'GitHub', repos: [], user },
+        revalidate: 10,
+      };
+    }
+
+    repos = repos
+      .sort((a, b) => b.stargazers_count - a.stargazers_count)
+      .slice(0, 6);
+
+    return {
+      props: { title: 'GitHub', repos, user },
+      revalidate: 10,
+    };
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return {
+      props: { title: 'GitHub', repos: [], user: {} },
+      revalidate: 10,
+    };
+  }
 }
 
 export default GithubPage;
